@@ -1,0 +1,13 @@
+{
+  "name": "login-demo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.22.1",
+    "mongoose": "^9.4.1"
+  }
+}
